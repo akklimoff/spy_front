@@ -1,0 +1,85 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <!-- Logo placeholder - replace with your logo -->
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L1 21h22L12 2zm0 6.92L16.6 16h-9.2L12 8.92z" fill="#1a73e8"/>
+        </svg>
+      </div>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-subtitle">to continue to Spy Game</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div *ngIf="errorMessage" class="error-container">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <input
+          type="text"
+          id="nickname"
+          formControlName="nickname"
+          class="form-control"
+          [class.is-invalid]="nickname?.invalid && nickname?.touched"
+          placeholder=" "
+        >
+        <label for="nickname" class="form-label">Username</label>
+        <div *ngIf="nickname?.invalid && nickname?.touched" class="invalid-feedback">
+          <span *ngIf="nickname?.errors?.['required']">Username cannot be blank</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="email?.invalid && email?.touched"
+          placeholder=" "
+        >
+        <label for="email" class="form-label">Email</label>
+        <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+          <span *ngIf="email?.errors?.['required']">Email cannot be blank</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="password?.invalid && password?.touched"
+          placeholder=" "
+        >
+        <label for="password" class="form-label">Password</label>
+        <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+          {{ showPassword ? '🙈' : '👁️' }}
+        </button>
+        <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
+          <span *ngIf="password?.errors?.['required']">Password cannot be blank</span>
+          <span *ngIf="password?.errors?.['minlength'] || password?.errors?.['maxlength']">
+            Length must be between 3 and 24 characters
+          </span>
+          <span *ngIf="password?.errors?.['pattern']">
+            Password must contain at least one lowercase letter
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="auth-button"
+        [disabled]="registerForm.invalid || isSubmitting"
+      >
+        {{ isSubmitting ? 'Creating account...' : 'Register' }}
+      </button>
+
+      <a routerLink="/login" class="auth-link">Already have an account? Sign in</a>
+    </form>
+  </div>
+</div> 

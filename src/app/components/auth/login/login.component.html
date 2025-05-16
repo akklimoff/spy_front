@@ -1,0 +1,64 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <!-- Logo placeholder - replace with your logo -->
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L1 21h22L12 2zm0 6.92L16.6 16h-9.2L12 8.92z" fill="#1a73e8"/>
+        </svg>
+      </div>
+      <h1 class="auth-title">Sign in</h1>
+      <p class="auth-subtitle">to continue to Spy Game</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div *ngIf="errorMessage" class="error-container">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="email?.invalid && email?.touched"
+          placeholder=" "
+        >
+        <label for="email" class="form-label">Email</label>
+        <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+          <span *ngIf="email?.errors?.['required']">Email is required</span>
+          <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="password?.invalid && password?.touched"
+          placeholder=" "
+        >
+        <label for="password" class="form-label">Password</label>
+        <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+          {{ showPassword ? '🙈' : '👁️' }}
+        </button>
+        <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
+          <span *ngIf="password?.errors?.['required']">Password is required</span>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="auth-button"
+        [disabled]="loginForm.invalid || isSubmitting"
+      >
+        {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
+      </button>
+
+      <a routerLink="/register" class="auth-link">Create account</a>
+    </form>
+  </div>
+</div> 

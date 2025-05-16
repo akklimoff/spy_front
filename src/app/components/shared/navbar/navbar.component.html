@@ -1,0 +1,27 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/">
+        <!-- Logo placeholder - replace with your logo -->
+        <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L1 21h22L12 2zm0 6.92L16.6 16h-9.2L12 8.92z" fill="#1a73e8"/>
+        </svg>
+        <span class="brand-name">Spy Game</span>
+      </a>
+    </div>
+    
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+          <a routerLink="/login" class="navbar-item">Login</a>
+          <a routerLink="/register" class="navbar-item">Register</a>
+        </ng-container>
+        
+        <ng-template #loggedIn>
+          <a routerLink="/start" class="navbar-item">Start Game</a>
+          <button class="navbar-item logout-btn" (click)="logout()">Logout</button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nav> 
