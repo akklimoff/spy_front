@@ -1,67 +1,77 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ApiService } from './api.service';
+import * as jwt_decode from 'jwt-decode';
 
-export interface UserRegisterDto {
-  nickname: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginDto {
-  email: string;
-  password: string;
+export interface JwtPayload {
+  sub: string;      // обычно nickname
+  exp: number;      // время истечения (в секундах с 1970-01-01)
+  iat: number;      // время выпуска
+  // ... и любые другие поля, которые вы положили в токен
 }
 
 export interface AuthResponse {
-  token?: string;
-  user?: any;
+  token: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<AuthResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private apiService: ApiService) {
-    // Check if user is already logged in (from localStorage)
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+  constructor(private api: ApiService) {
+    const stored = localStorage.getItem('currentUser');
+    if (stored) {
+      this.currentUserSubject.next(JSON.parse(stored));
     }
   }
 
-  register(userRegisterDto: UserRegisterDto): Observable<any> {
-    return this.apiService.post('auth/register', userRegisterDto);
-  }
-
-  login(loginDto: LoginDto): Observable<AuthResponse> {
-    return this.apiService.post<AuthResponse>('auth/login', loginDto)
+  login(dto: { email: string; password: string; }): Observable<AuthResponse> {
+    return this.api.post<AuthResponse>('auth/login', dto)
       .pipe(
-        tap(response => {
-          if (response && response.token) {
-            // Store user details and token in local storage
-            localStorage.setItem('currentUser', JSON.stringify(response));
-            this.currentUserSubject.next(response);
-          }
+        tap(res => {
+          localStorage.setItem('currentUser', JSON.stringify(res));
+          this.currentUserSubject.next(res);
         })
       );
   }
 
-  logout(): void {
-    // Remove user from local storage and set current user to null
+  register(dto: { nickname: string; email: string; password: string; }): Observable<any> {
+    return this.api.post<any>('auth/register', dto);
+  }
+
+  /** Проверить, что пользователь залогинен и токен ещё живой **/
+  isLoggedIn(): boolean {
+    return !!this.token && !this.isTokenExpired();
+  }
+
+  logout() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 
-  getCurrentUser(): any {
-    return this.currentUserSubject.value;
+  get token(): string | null {
+    return this.currentUserSubject.value?.token || null;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value;
+  /** Раскодировать payload из токена **/
+  get decodedToken(): JwtPayload | null {
+    if (!this.token) return null;
+    try {
+      return (jwt_decode as any)(this.token) as JwtPayload;
+    } catch {
+      return null;
+    }
   }
+
+  /** Проверить, что токен ещё действителен **/
+  isTokenExpired(): boolean {
+    const payload = this.decodedToken;
+    if (!payload) return true;
+    // exp указан в секундах
+    return payload.exp * 1000 < Date.now();
+  }
+
+  /** Проверить, что пользователь залогинен и токен ещё живой **/
 }

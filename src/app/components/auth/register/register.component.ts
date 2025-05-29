@@ -54,14 +54,14 @@ export class RegisterComponent {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         // Redirect to login page after successful registration
-        this.router.navigate(['/login'], { 
-          queryParams: { registered: 'true' } 
+        this.router.navigate(['/login'], {
+          queryParams: { registered: 'true' }
         });
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isSubmitting = false;
         this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
       }
     });
   }
-} 
+}
