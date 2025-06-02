@@ -23,12 +23,12 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      nickname: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }
 
-  get email() { return this.loginForm.get('email'); }
+  get nickname() { return this.loginForm.get('nickname'); }
   get password() { return this.loginForm.get('password'); }
 
   togglePasswordVisibility() {

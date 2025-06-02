@@ -38,7 +38,7 @@
     font-size: 1.8rem;
     font-weight: 600;
   }
-  
+
   .setting-group {
     margin-bottom: 1.5rem;
     background-color: rgba(255, 255, 255, 0.7);
@@ -51,7 +51,7 @@
       font-weight: 500;
       margin-bottom: 0.8rem;
     }
-    
+
     .setting-controls {
       display: flex;
       flex-direction: column;
@@ -145,8 +145,8 @@
         &.selected {
           background-color: #4a90e2;
           color: white;
-        }
-      }
+    }
+  }
     }
   }
   
@@ -163,12 +163,12 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    
+
     &:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
-    
+
     &:hover:not(:disabled) {
       background-color: #3a7bc8;
     }

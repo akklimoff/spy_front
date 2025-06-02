@@ -18,17 +18,16 @@
 
       <div class="form-group">
         <input
-          type="email"
-          id="email"
-          formControlName="email"
+          type="text"
+          id="nickname"
+          formControlName="nickname"
           class="form-control"
-          [class.is-invalid]="email?.invalid && email?.touched"
+          [class.is-invalid]="nickname?.invalid && nickname?.touched"
           placeholder=" "
         >
-        <label for="email" class="form-label">Email</label>
-        <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
-          <span *ngIf="email?.errors?.['required']">Email is required</span>
-          <span *ngIf="email?.errors?.['email']">Please enter a valid email address</span>
+        <label for="nickname" class="form-label">Nickname</label>
+        <div *ngIf="nickname?.invalid && nickname?.touched" class="invalid-feedback">
+          <span *ngIf="nickname?.errors?.['required']">Nickname is required</span>
         </div>
       </div>
 

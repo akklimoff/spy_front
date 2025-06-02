@@ -49,7 +49,7 @@ export class StartComponent implements OnInit {
     if (currentValue < 11) {
       this.gameForm.get('players')?.setValue(currentValue + 1);
       this.validateSpiesCount();
-    }
+  }
   }
 
   decreasePlayer() {
